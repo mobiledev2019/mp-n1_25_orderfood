@@ -17,7 +17,23 @@ const language = (state = 'vi', action)=>{
     }
     return state;
 }
+const currency = (state = 'vnd', action)=>{
+    switch(action.type){
+        case 'CHANGE_CURRENCY':
+            return action.text;
+    }
+    return state; 
+}
+const theme = (state = '#d50000', action) =>{
+    switch(action.type){
+        case'CHANG_THEME':
+            return action.text;
+    }
+    return state;
+}
 export default combineReducers({
     cartItems : cart,
-    language: language
+    language: language,
+    currency: currency,
+    theme: theme
 });

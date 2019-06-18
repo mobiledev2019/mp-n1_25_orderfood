@@ -31,8 +31,8 @@ export default class Discover extends Component {
                     data={ this.state.DiscoverMenu }
                     renderItem={ ({item}) =>
                     <View style={styles.GridViewContainer}>
-                       {/* <TouchableOpacity onPress={()=> this.props.navigate(this.props.routes)}> */}
-                       <TouchableOpacity>
+                       <TouchableOpacity onPress={()=> this.props.navigate(this.props.routes)}>
+                       {/* <TouchableOpacity> */}
                             <Image style={styles.image} source={item.url} />
                             <Text style={styles.GridViewTextLayout} > {item.key} </Text>
                         </TouchableOpacity>  

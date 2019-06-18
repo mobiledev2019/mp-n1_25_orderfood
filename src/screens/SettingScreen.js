@@ -49,6 +49,11 @@ class SettingScreen extends React.Component {
               onPress={() => this.props.navigation.navigate('History')}
             />
             <SettingsList.Item
+              icon={<Image style={styles.imageStyle} source={require('./../images/history.png')}/>}
+              title="Điểm tích lũy"
+              onPress={() => this.props.navigation.navigate('Point')}
+            />
+            <SettingsList.Item
               icon={<Image style={styles.imageStyle} source={require('./../images/policy.png')}/>}
               title={stringsoflanguages.policy}
               onPress={() => this.props.navigation.navigate('Policy')}

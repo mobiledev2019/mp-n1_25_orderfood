@@ -18,6 +18,8 @@ import InvoiceScreen from './screens/InvoiceScreen';
 import UpdateProfileScreen from './screens/UpdateProfileScreen';
 import CategoryScreen from './screens/CategoryScreen';
 import FoodScreen from './screens/FoodScreen';
+import PointScreen from './screens/PointScreen';
+import DetailOrder from './screens/DetailOrder';
 import {connect} from 'react-redux';
 const headerOpt = {
   headerStyle: {
@@ -35,10 +37,10 @@ const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
     Detail: DetailScreen,
-    Category: CategoryScreen,
     Cart: CartScreen,
     Checkout: CheckoutScreen,
-    Success: SuccessScreen
+    Success: SuccessScreen, 
+
   },
   {
     initialRouteName: 'Home',
@@ -57,7 +59,9 @@ const SettingsStack = createStackNavigator(
     Config: ConfigSCreen,
     Invoice: InvoiceScreen,
     Update: UpdateProfileScreen,
-    Logout: LoginScreen
+    Logout: LoginScreen, 
+    Point: PointScreen,
+    DetailOrder: DetailOrder
   },
   {
     defaultNavigationOptions: {
@@ -66,13 +70,16 @@ const SettingsStack = createStackNavigator(
   }
 );
 
-const CartStack = createStackNavigator(
+const CartegoryStack = createStackNavigator(
   {
-    Cart: {
-      screen: CartScreen
+    Category: {
+     
+      screen: CategoryScreen,
+     
+      navigationOptions: ({ navigation }) => ({
+        title: 'Danh mục sản phẩm',
+      }),
     },
-    Checkout: CheckoutScreen,
-    Success: SuccessScreen
   },
   {
     defaultNavigationOptions: {
@@ -125,7 +132,7 @@ const HomeIconWithBadge = (props) => {
 const TabNavigator = createBottomTabNavigator(
 {
     Home: HomeStack,
-    // Cart: CartStack,
+    Category: CartegoryStack,
     Settings: SettingsStack,
     },
     {
@@ -142,9 +149,9 @@ const TabNavigator = createBottomTabNavigator(
             // You can check the implementation below.
             // IconComponent = HomeIconWithBadge; 
         } 
-        else if (routeName === 'Cart') {
-            iconName = `ios-cart${focused ? '' : ''}`;
-            IconComponent = HomeIconWithBadge;
+        else if (routeName === 'Category') {
+            iconName = `ios-apps${focused ? '' : ''}`;
+            // IconComponent = HomeIconWithBadge;
         }else if (routeName === 'Settings') {
             iconName = `ios-settings${focused ? '' : ''}`;
         }
@@ -155,16 +162,16 @@ const TabNavigator = createBottomTabNavigator(
     }),
     tabBarOptions: {
         activeTintColor: '#d50000',
+        // activeTintColor: `${this.props.theme}`,
         inactiveTintColor: 'gray',
     },
     }
 );
 
 const mapStateToProps = (state) => {
-  
-  console.log("AAA"+ state);
+  const {cartItems, language, theme} = state;
   return {
-    cartItems: state
+    cartItems, language ,theme
   }
 }
 

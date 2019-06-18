@@ -133,16 +133,19 @@ class HomeScreen extends React.Component {
    
   };
   componentWillMount(){
+  
     stringsolanguages.setLanguage(this.props.language);
+    var currency = this.props.currency;
     var DiscoverMenu = [];
     var self = this;
     this.dataItem.on('value', function(snapshot) {
       snapshot.forEach((doc) => {
+        var price = currency == 'vnd' ? doc.toJSON().price : doc.toJSON().price_usd;
         DiscoverMenu.push({
            key: doc.key,
            name: doc.toJSON().name,
            discription: doc.toJSON().discription,
-           price: doc.toJSON().price,
+           price: price,
            img: doc.toJSON().img
         });
           self.setState({
@@ -193,7 +196,7 @@ class HomeScreen extends React.Component {
         </TouchableOpacity> 
         <View style={{flex: 1, justifyContent: 'center', marginLeft: 10}}>
           <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.price}>{this.formatprice(item.price, "đ")}</Text>
+          <Text style={styles.price}>{this.formatprice(item.price, this.props.currency == 'vnd'? "đ" : "$")}</Text>
           <Text style={{fontSize: 12}}>Sau nguyen | 3 ngày trước</Text>
              <Icon name="md-cart" size={30} color="#9b0000" onPress= {() => this.handleAddCart(item)} />
         </View>    
@@ -203,22 +206,16 @@ class HomeScreen extends React.Component {
   
   render() {
     stringsolanguages.setLanguage(this.props.language);
-    if(!this.state.isLoading){
-      return (
-        <View styles={{flex: 1, justifyContent:"center", textAlign:"center"}}>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      )
-    }
+    
     return (
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row', backgroundColor:"#d50000"}}>
           <View style={{width: '90%'}}>
             <SearchBar        
-                inputContainerStyle={{backgroundColor: "#fff", borderRadius: 25, height: 40, margin: 0, borderColor: '#d50000', border:'none'}} 
+                inputContainerStyle={{backgroundColor: "#fff", borderRadius: 25, height: 40, margin: 0, borderColor: '#d50000'}} 
                 inputStyle={{backgroundColor :"#fff", color: "#000"}}
                 placeholder= {stringsolanguages.search}        
-                containerStyle={{ backgroundColor: '#d50000', padding: 4, marginRight:0 , border: 0, borderColor: "#d50000", borderBottomColor: 'transparent',
+                containerStyle={{ backgroundColor: '#d50000', padding: 4, marginRight:0 , borderColor: "#d50000", borderBottomColor: 'transparent',
                 borderTopColor: 'transparent'}}    
                   onChangeText={text => this.searchFilterFunction(text)}
                   value= {this.state.search}
@@ -234,24 +231,33 @@ class HomeScreen extends React.Component {
           
         <StatusBar backgroundColor="#9b0000" barStyle="light-content" />
         <ScrollView style={{flex: 1}}>
-          <BannerSlider style={{marginTop: 10, paddingTop: 10}}/>
-          <Discover 
-            // navigate={this.props.navigation.navigate}
-            // routes= "Category"
-          />
-          <View style={ styles.view}>
-          <Icon name="ios-list" color="#333"  size={30} style={{marginRight: 10}} iconStyle={{paddingLeft: 20, marginRight: 20}} onPress={this.ChangeListView}/>
-          <Icon name="ios-grid" color="#333"  size={30} iconStyle={styles.container} onPress={this.ChangeGridValueFunction}/>
+          {this.state.search == "" ? 
+          <View>
+            <BannerSlider style={{marginTop: 10, paddingTop: 10}}></BannerSlider>
+            <Discover /> 
+            
+            <View style={ styles.view}>
+            <Icon name="ios-list" color="#333"  size={30} style={{marginRight: 10}} iconStyle={{paddingLeft: 20, marginRight: 20}} onPress={this.ChangeListView}/>
+            <Icon name="ios-grid" color="#333"  size={30} iconStyle={styles.container} onPress={this.ChangeGridValueFunction}/>
+          
+            </View>
+          </View>: null}
         
-          </View>
-         <View style={ styles.container}>
+          {!this.state.isLoading ?  
+              <View styles={{flex: 1, justifyContent:"center", textAlign:"center"}}>
+                <ActivityIndicator size="large" color="#0000ff" />
+              </View>
+            :  
+            <View style={ styles.container}>
                 <FlatList
                     data={ this.state.DiscoverMenu }
                     renderItem={ this.renderItem}
                     key = {( this.state.GridColumnsValue ) ? 'ONE COLUMN' : 'TWO COLUMN' }
                     numColumns = { this.state.GridColumnsValue ? 1 : 2 }
                 />       
-          </View>        
+            </View>        
+        }
+         
         </ScrollView>
       </View>
     );
@@ -265,9 +271,9 @@ const mapDispatchToProps = (dispatch) =>{
   }
 }
 const mapStateToProps = (state) =>{
-  const {cartItems, language} = state;
+  const {cartItems, language, currency, theme} = state;
   return {
-    cartItems, language
+    cartItems, language, currency, theme
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
